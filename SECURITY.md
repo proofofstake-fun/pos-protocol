@@ -32,4 +32,4 @@ say it here than have you find out.
 
 ## Reporting a vulnerability
 
-Please report privately before publishing anything, and never test on other people's funds: https://x.com/pr00f0fstake. We will answer, fix, and credit you if you wish.
+Please report privately before publishing anything, and never test on other people's funds: https://x.com/pos_fun. We will answer, fix, and credit you if you wish.
