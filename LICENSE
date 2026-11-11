@@ -1,0 +1,20 @@
+Proof of Stake: source-available license
+
+Copyright (c) 2026 Proof of Stake. All rights reserved.
+
+This repository is published so that anyone can audit the code of the Proof of
+Stake program and verify that it is the program deployed on Solana.
+
+You may, free of charge:
+  - read, download and copy this code;
+  - build it, run its tests, and reproduce its verifiable build;
+  - quote it in audits, reviews, articles and security reports.
+
+You may not, without prior written permission:
+  - deploy this program, or a modified version of it, to any public network;
+  - use this code, or a substantial part of it, in a product or service;
+  - remove or alter this notice.
+
+THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE CODE OR ITS USE.

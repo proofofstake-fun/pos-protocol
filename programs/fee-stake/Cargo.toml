@@ -1,0 +1,29 @@
+[package]
+name = "fee-stake"
+version = "0.1.0"
+description = "Stake a pump.fun coin, earn its creator fees pro-rata (the pool is a locked shareholder of the coin's fee sharing config)"
+edition = "2021"
+rust-version.workspace = true
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "fee_stake"
+
+[features]
+default = []
+# Local tests use our own launchpad curve instead of pump.fun: skip the bonding-curve ownership check.
+# NEVER deploy a build made with this feature.
+skip-curve-check = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.31.1", features = ["init-if-needed"] }
+anchor-spl = "0.31.1"
+stake-math = { path = "../../crates/stake-math" }
+
+[dev-dependencies]
+proptest = "1"

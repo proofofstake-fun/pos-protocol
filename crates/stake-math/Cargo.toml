@@ -1,0 +1,11 @@
+[package]
+name = "stake-math"
+version = "0.1.0"
+edition = "2021"
+rust-version.workspace = true
+description = "Reward-per-share accumulator for pro-rata fee distribution to stakers (host-testable, no Solana deps)"
+
+[dependencies]
+
+[dev-dependencies]
+proptest = "1"

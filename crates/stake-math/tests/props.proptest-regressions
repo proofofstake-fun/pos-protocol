@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 1ca6a3c2811ee7778bb3b1d12f8ac27db4e2eaadcab9d5a8a4fde3bea1c539ba # shrinks to grief = 175725225647, whale = 88020261505649, windows = 22
+cc 20c35f836342a1264a175cf888c0f93c7e7885ccb4e1cc9faba7770bcf3cc963 # shrinks to ops = [Stake { who: 3, amount: 111905052592829 }, Stake { who: 1, amount: 41253548413515 }, Advance(1), Fees(48550285392), Advance(1), Fees(157795095104), Unstake { who: 3, amount: 46145662286936 }, Stake { who: 0, amount: 112894296278279 }, Fees(176060546657), Stake { who: 1, amount: 203313755132637 }, Stake { who: 1, amount: 35095849001064 }, Unstake { who: 1, amount: 187514428752189 }, Advance(1), Fees(377562916212), Fees(332652307847), Stake { who: 0, amount: 34753259041238 }, Advance(1), Unstake { who: 1, amount: 47985037638413 }, Stake { who: 0, amount: 1 }, Unstake { who: 3, amount: 441016984934 }, Stake { who: 0, amount: 1 }, Fees(1), Stake { who: 0, amount: 7338739148347 }, Fees(16679858084), Stake { who: 0, amount: 1 }, Stake { who: 0, amount: 1 }, Stake { who: 0, amount: 1 }, Stake { who: 0, amount: 1 }, Unstake { who: 0, amount: 11012208614337 }]

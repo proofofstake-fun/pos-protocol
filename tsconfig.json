@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["mocha", "chai", "node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["tests", "sdk", "tools"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "pos-protocol",
+  "private": true,
+  "description": "Proof of Stake: the on-chain program. 100% of a coin's trading fees to the people who stake it.",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "build": "anchor build -p fee_stake",
+    "build:verifiable": "anchor build --verifiable -p fee_stake",
+    "test:math": "cargo test -p stake-math && node --experimental-strip-types --test sdk/tests/stake.test.ts sdk/tests/stake-mirror.test.ts",
+    "test:fuzz": "cargo test -p fee-stake --lib",
+    "test:e2e": "anchor test -- --features skip-curve-check",
+    "check:coin": "tsx tools/check-coin.ts",
+    "check:program": "tsx tools/check-program.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.98.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.20",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.0",
+    "chai": "^4.5.0",
+    "mocha": "^10.8.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

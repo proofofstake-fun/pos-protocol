@@ -1,0 +1,23 @@
+[toolchain]
+anchor_version = "0.31.1"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+fee_stake = "PoSBsxAZVhLmPAUv9YLcWHauVjzSro6smzt92JPWtLY"
+
+[programs.mainnet]
+fee_stake = "PoSBsxAZVhLmPAUv9YLcWHauVjzSro6smzt92JPWtLY"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "npx mocha --import=tsx -t 1000000 tests/fee_stake.ts"
+
+[test]
+startup_wait = 10000
+upgradeable = true

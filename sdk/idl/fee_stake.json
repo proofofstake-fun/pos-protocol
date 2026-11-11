@@ -1,0 +1,2770 @@
+{
+  "address": "PoSBsxAZVhLmPAUv9YLcWHauVjzSro6smzt92JPWtLY",
+  "metadata": {
+    "name": "fee_stake",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Stake a pump.fun coin, earn its creator fees pro-rata (the pool is a locked shareholder of the coin's fee sharing config)"
+  },
+  "instructions": [
+    {
+      "name": "activate",
+      "docs": [
+        "Permissionless: settle a pending deposit once its window has passed."
+      ],
+      "discriminator": [
+        194,
+        203,
+        35,
+        100,
+        151,
+        55,
+        170,
+        82
+      ],
+      "accounts": [
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          },
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "position.owner",
+                "account": "StakePosition"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim",
+      "docs": [
+        "Permissionless: push owed SOL to `owner`."
+      ],
+      "discriminator": [
+        62,
+        198,
+        214,
+        193,
+        213,
+        159,
+        108,
+        210
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          },
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "fee",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "close_position",
+      "docs": [
+        "Permissionless: close an empty position, pay its owner what is left,",
+        "return the rent to the attestor."
+      ],
+      "discriminator": [
+        123,
+        134,
+        81,
+        0,
+        49,
+        68,
+        98,
+        98
+      ],
+      "accounts": [
+        {
+          "name": "rent_receiver",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          },
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "credit_deposit",
+      "docs": [
+        "Attestor only: credit `owner` for `amount` sent to the pool address in",
+        "transaction `origin`. Bounded by the vault's real balance."
+      ],
+      "discriminator": [
+        4,
+        82,
+        10,
+        16,
+        162,
+        151,
+        85,
+        226
+      ],
+      "accounts": [
+        {
+          "name": "attestor",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner"
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "pool"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "origin",
+          "type": {
+            "array": [
+              "u8",
+              64
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "harvest",
+      "docs": [
+        "Permissionless: park received fees and cross any window boundary."
+      ],
+      "discriminator": [
+        228,
+        241,
+        31,
+        182,
+        53,
+        169,
+        59,
+        199
+      ],
+      "accounts": [
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_config",
+      "docs": [
+        "Once per deployment: the deployer becomes admin, `attestor` is the crank's",
+        "key, `fee_receiver` the platform's wallet for the launch and exit fees."
+      ],
+      "discriminator": [
+        23,
+        235,
+        115,
+        232,
+        168,
+        96,
+        1,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program",
+          "address": "PoSBsxAZVhLmPAUv9YLcWHauVjzSro6smzt92JPWtLY"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "attestor",
+          "type": "pubkey"
+        },
+        {
+          "name": "fee_receiver",
+          "type": "pubkey"
+        },
+        {
+          "name": "launch_fee",
+          "type": "u64"
+        },
+        {
+          "name": "exit_fee",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "init_pool",
+      "docs": [
+        "Create the pool (pays the launch fee): 1-minute windows, 1-hour leaving delay, always. The two",
+        "arguments are kept for compatibility and ignored (the test build still",
+        "reads them for legacy pools; see `MIN_COOLDOWN`)."
+      ],
+      "discriminator": [
+        116,
+        233,
+        199,
+        204,
+        115,
+        159,
+        171,
+        36
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "bonding_curve",
+          "docs": [
+            "Its `creator` field must be this program's creator PDA (coin launched by the site),",
+            "the signer (a wallet-created coin) or the coin's fee sharing config: only real",
+            "pump.fun coins get a pool, and junk mints cannot be used to spam pools."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  45,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                1,
+                86,
+                224,
+                246,
+                147,
+                102,
+                90,
+                207,
+                68,
+                219,
+                21,
+                104,
+                191,
+                23,
+                91,
+                170,
+                81,
+                137,
+                203,
+                151,
+                245,
+                210,
+                255,
+                59,
+                101,
+                93,
+                43,
+                182,
+                253,
+                109,
+                24,
+                176
+              ]
+            }
+          }
+        },
+        {
+          "name": "creator_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  114,
+                  101,
+                  97,
+                  116,
+                  111,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "fee_receiver",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "epoch_seconds",
+          "type": {
+            "option": "i64"
+          }
+        },
+        {
+          "name": "cooldown_seconds",
+          "type": {
+            "option": "i64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lock_fee_split",
+      "docs": [
+        "Lock the coin's pump.fun creator-fee split to 100 % to the pool, for a coin whose pump.fun `creator` is this program's PDA. The pool PDA signs",
+        "the fee-program CPIs, so nobody (creator or platform) can change the",
+        "split afterwards. See `instructions::lock_fee_split`."
+      ],
+      "discriminator": [
+        171,
+        192,
+        172,
+        118,
+        175,
+        246,
+        70,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "docs": [
+            "Pays the rent the fee program needs (sent to the creator PDA first, which pays as signer)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "pool"
+          ]
+        },
+        {
+          "name": "pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  114,
+                  101,
+                  97,
+                  116,
+                  111,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "fee_program",
+          "address": "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "create_accounts",
+          "type": "u8"
+        },
+        {
+          "name": "create_data",
+          "type": "bytes"
+        },
+        {
+          "name": "update_data",
+          "type": "bytes"
+        },
+        {
+          "name": "fund_lamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "request_exit",
+      "docs": [
+        "Attestor only: `owner` sent \u2265 0.01 SOL to the pool address in `origin`;",
+        "everything they have goes into cooldown."
+      ],
+      "discriminator": [
+        121,
+        186,
+        203,
+        74,
+        138,
+        218,
+        135,
+        151
+      ],
+      "accounts": [
+        {
+          "name": "attestor",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "fee_receiver",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          },
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "origin",
+          "type": {
+            "array": [
+              "u8",
+              64
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "request_unstake",
+      "docs": [
+        "Wallet path out: the signer pays the exit fee; `amount` (u64::MAX =",
+        "everything) goes into cooldown."
+      ],
+      "discriminator": [
+        44,
+        154,
+        110,
+        253,
+        160,
+        202,
+        54,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "fee_receiver",
+          "writable": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          },
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "rescue_token",
+      "docs": [
+        "Admin only: send back, to `to`, a token that is NOT the pool's coin and",
+        "was sent to the pool address by mistake. The stakers' coin and the",
+        "pool's SOL can never leave this way."
+      ],
+      "discriminator": [
+        227,
+        248,
+        168,
+        149,
+        165,
+        80,
+        20,
+        89
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.mint",
+                "account": "StakePool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "stray_mint"
+        },
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "to",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "set_admin",
+      "docs": [
+        "Admin only: hand the admin role over (to the multisig)."
+      ],
+      "discriminator": [
+        251,
+        163,
+        0,
+        52,
+        91,
+        194,
+        187,
+        92
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_attestor",
+      "docs": [
+        "Admin only: rotate the attribution key."
+      ],
+      "discriminator": [
+        95,
+        11,
+        236,
+        157,
+        234,
+        146,
+        163,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "attestor",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_fees",
+      "docs": [
+        "Admin only: the platform's wallet and its two fees, within the caps."
+      ],
+      "discriminator": [
+        137,
+        178,
+        49,
+        58,
+        0,
+        245,
+        242,
+        190
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_receiver",
+          "type": "pubkey"
+        },
+        {
+          "name": "launch_fee",
+          "type": "u64"
+        },
+        {
+          "name": "exit_fee",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "stake",
+      "docs": [
+        "Wallet path in: the signer's coins go to the vault and are credited at once."
+      ],
+      "discriminator": [
+        206,
+        176,
+        202,
+        18,
+        200,
+        209,
+        179,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "pool"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "owner_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "unstake",
+      "docs": [
+        "Permissionless: return cooled-down tokens to `owner`."
+      ],
+      "discriminator": [
+        90,
+        95,
+        107,
+        42,
+        205,
+        124,
+        50,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "pool"
+          ]
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "owner_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    },
+    {
+      "name": "StakePool",
+      "discriminator": [
+        121,
+        34,
+        206,
+        21,
+        79,
+        127,
+        255,
+        28
+      ]
+    },
+    {
+      "name": "StakePosition",
+      "discriminator": [
+        78,
+        165,
+        30,
+        111,
+        171,
+        125,
+        11,
+        220
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "Activated",
+      "discriminator": [
+        140,
+        38,
+        35,
+        97,
+        110,
+        193,
+        239,
+        71
+      ]
+    },
+    {
+      "name": "Claimed",
+      "discriminator": [
+        217,
+        192,
+        123,
+        72,
+        108,
+        150,
+        248,
+        33
+      ]
+    },
+    {
+      "name": "ConfigChanged",
+      "discriminator": [
+        147,
+        25,
+        86,
+        98,
+        98,
+        77,
+        78,
+        192
+      ]
+    },
+    {
+      "name": "DepositCredited",
+      "discriminator": [
+        44,
+        173,
+        31,
+        122,
+        40,
+        72,
+        132,
+        147
+      ]
+    },
+    {
+      "name": "EpochClosed",
+      "discriminator": [
+        21,
+        4,
+        48,
+        56,
+        29,
+        169,
+        77,
+        42
+      ]
+    },
+    {
+      "name": "ExitRequested",
+      "discriminator": [
+        92,
+        125,
+        6,
+        23,
+        233,
+        196,
+        149,
+        70
+      ]
+    },
+    {
+      "name": "FeeSplitLocked",
+      "discriminator": [
+        121,
+        138,
+        58,
+        158,
+        34,
+        67,
+        105,
+        82
+      ]
+    },
+    {
+      "name": "PoolCreated",
+      "discriminator": [
+        202,
+        44,
+        41,
+        88,
+        104,
+        220,
+        157,
+        82
+      ]
+    },
+    {
+      "name": "PositionClosed",
+      "discriminator": [
+        157,
+        163,
+        227,
+        228,
+        13,
+        97,
+        138,
+        121
+      ]
+    },
+    {
+      "name": "Staked",
+      "discriminator": [
+        11,
+        146,
+        45,
+        205,
+        230,
+        58,
+        213,
+        240
+      ]
+    },
+    {
+      "name": "StrayTokenReturned",
+      "discriminator": [
+        210,
+        132,
+        14,
+        118,
+        77,
+        212,
+        251,
+        135
+      ]
+    },
+    {
+      "name": "Unstaked",
+      "discriminator": [
+        27,
+        179,
+        156,
+        215,
+        47,
+        71,
+        195,
+        7
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "ZeroAmount",
+      "msg": "Amount must be greater than zero"
+    },
+    {
+      "code": 6001,
+      "name": "InsufficientStake",
+      "msg": "Not enough staked tokens"
+    },
+    {
+      "code": 6002,
+      "name": "CooldownActive",
+      "msg": "Cooldown has not elapsed yet"
+    },
+    {
+      "code": 6003,
+      "name": "NothingToUnstake",
+      "msg": "Nothing to unstake"
+    },
+    {
+      "code": 6004,
+      "name": "NothingToClaim",
+      "msg": "Nothing to claim"
+    },
+    {
+      "code": 6005,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    },
+    {
+      "code": 6006,
+      "name": "RentViolation",
+      "msg": "Pool would drop below rent exemption"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidCooldown",
+      "msg": "Invalid cooldown"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidEpoch",
+      "msg": "Invalid epoch length"
+    },
+    {
+      "code": 6009,
+      "name": "NothingStaked",
+      "msg": "Nothing staked"
+    },
+    {
+      "code": 6010,
+      "name": "DepositTooSmall",
+      "msg": "Deposit below the minimum of 1,000 tokens"
+    },
+    {
+      "code": 6011,
+      "name": "NotACurve",
+      "msg": "Not a pump.fun bonding curve for this mint"
+    },
+    {
+      "code": 6012,
+      "name": "NotTheCreator",
+      "msg": "Only the coin's creator (pump.fun bonding curve creator) can open its pool"
+    },
+    {
+      "code": 6013,
+      "name": "BadCpi",
+      "msg": "Fee-program CPI refused: wrong program, discriminator or signer"
+    },
+    {
+      "code": 6014,
+      "name": "BadSplit",
+      "msg": "Fee split must be exactly 100 % to the pool"
+    },
+    {
+      "code": 6015,
+      "name": "UnsafeMint",
+      "msg": "Mint carries a Token-2022 extension the pool cannot work with (transfer fee, hook, permanent delegate, ...)"
+    },
+    {
+      "code": 6016,
+      "name": "NotAttestor",
+      "msg": "Only the attestor (config.attestor) may attribute deposits and exits"
+    },
+    {
+      "code": 6017,
+      "name": "NotAdmin",
+      "msg": "Only the admin (config.admin) may change the config"
+    },
+    {
+      "code": 6018,
+      "name": "ExceedsVault",
+      "msg": "Credit would exceed the tokens actually held by the vault"
+    },
+    {
+      "code": 6019,
+      "name": "BadOwner",
+      "msg": "Owner must be a real wallet address"
+    },
+    {
+      "code": 6020,
+      "name": "FeeTooHigh",
+      "msg": "Platform fee above the cap (launch 0.2 SOL, exit 0.05 SOL)"
+    },
+    {
+      "code": 6021,
+      "name": "BadFeeReceiver",
+      "msg": "Fee receiver must be the wallet set in the config"
+    },
+    {
+      "code": 6022,
+      "name": "NotRentPayer",
+      "msg": "The rent goes back to the account that paid it"
+    },
+    {
+      "code": 6023,
+      "name": "ClaimFeeTooHigh",
+      "msg": "A caller may keep at most 5,000 lamports from a payout"
+    },
+    {
+      "code": 6024,
+      "name": "PositionNotEmpty",
+      "msg": "Only an empty position (nothing active, pending or leaving) can be closed"
+    },
+    {
+      "code": 6025,
+      "name": "NotUpgradeAuthority",
+      "msg": "Only the program's upgrade authority can create the config"
+    },
+    {
+      "code": 6026,
+      "name": "NotAStrayToken",
+      "msg": "Only a token other than the pool's own coin can be sent back this way"
+    }
+  ],
+  "types": [
+    {
+      "name": "Activated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Claimed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lamports",
+            "docs": [
+              "Paid to the owner."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "docs": [
+              "Kept by the caller for the network fee (\u2264 MAX_CLAIM_FEE; 0 when the owner calls)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "docs": [
+        "`[\"config\"]`: who may attest deposits and exits, where the platform's fees",
+        "go, and who may change that."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "docs": [
+              "Multisig on mainnet. Can rotate `attestor`, set the fees and hand over `admin`."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "attestor",
+            "docs": [
+              "The crank's attribution key: the only signer `credit_deposit` and",
+              "`request_exit` accept."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_receiver",
+            "docs": [
+              "The platform's wallet: receives the launch fee and the exit fees. It",
+              "never receives any part of a coin's trading fees."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "launch_fee",
+            "docs": [
+              "Paid once, by whoever opens a coin's pool (\u2264 MAX_LAUNCH_FEE)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "exit_fee",
+            "docs": [
+              "Paid by a staker asking to leave (\u2264 MAX_EXIT_FEE)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "attestor",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_receiver",
+            "type": "pubkey"
+          },
+          {
+            "name": "launch_fee",
+            "type": "u64"
+          },
+          {
+            "name": "exit_fee",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositCredited",
+      "docs": [
+        "A deposit attributed by the attestor. `origin` is the signature of the",
+        "transfer into the vault: anyone can open it and check that `owner` is the",
+        "sender."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "origin",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "active_from_epoch",
+            "type": "u64"
+          },
+          {
+            "name": "total_pending",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpochClosed",
+      "docs": [
+        "Emitted when a window boundary is crossed and its fees are attributed."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "epoch_index",
+            "type": "u64"
+          },
+          {
+            "name": "attributed",
+            "type": "u64"
+          },
+          {
+            "name": "total_active",
+            "type": "u64"
+          },
+          {
+            "name": "acc_reward_per_share",
+            "type": "u128"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExitRequested",
+      "docs": [
+        "An exit: signed by the owner (`origin` is all zeros) or attributed by the",
+        "attestor (`origin` is the signature of the SOL transfer from `owner` to the",
+        "pool address). `fee` is what the platform received for it."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "origin",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          },
+          {
+            "name": "cooldown_until",
+            "type": "i64"
+          },
+          {
+            "name": "total_active",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeeSplitLocked",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "pool_bps",
+            "docs": [
+              "Share of the creator fees locked to the pool of stakers: always 10 000."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "locked",
+            "docs": [
+              "pump.fun creator is this program's PDA: split locked, parameters forced to defaults."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "epoch_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "cooldown_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PositionClosed",
+      "docs": [
+        "An empty position closed; its lifetime payouts are recorded here for good."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_claimed",
+            "docs": [
+              "Everything ever paid to the owner by this position, last payout included."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "last_payout",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakePool",
+      "docs": [
+        "One pool per coin. PDA `[\"pool\", mint]`.",
+        "",
+        "Registered as a locked shareholder (80 to 100 %) in the coin's pump.fun fee",
+        "sharing config: `distribute_creator_fees_v2` (permissionless) deposits SOL",
+        "straight onto this account. Every instruction first runs `sync`, which",
+        "parks newly received lamports for the running window and, at a window",
+        "boundary, attributes the finished window's fees to the stakers that were",
+        "active for the whole window."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "epoch_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "epoch_index",
+            "type": "u64"
+          },
+          {
+            "name": "total_active",
+            "type": "u64"
+          },
+          {
+            "name": "total_pending",
+            "type": "u64"
+          },
+          {
+            "name": "acc_reward_per_share",
+            "type": "u128"
+          },
+          {
+            "name": "acc_ring",
+            "type": {
+              "array": [
+                "u128",
+                16
+              ]
+            }
+          },
+          {
+            "name": "carry",
+            "type": "u64"
+          },
+          {
+            "name": "pending_rewards",
+            "type": "u64"
+          },
+          {
+            "name": "unclaimed_rewards",
+            "type": "u64"
+          },
+          {
+            "name": "total_distributed",
+            "type": "u64"
+          },
+          {
+            "name": "accounted_lamports",
+            "docs": [
+              "Lamports already known to the pool (rent + unclaimed + carry)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "vault_accounted",
+            "docs": [
+              "Tokens attributed to positions and still in the vault (active + pending",
+              "+ cooling down). `credit_deposit` may never push it past the vault's",
+              "real balance: the attestor cannot invent tokens."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "cooldown_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "staker_count",
+            "type": "u32"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "last_sync_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakePosition",
+      "docs": [
+        "One per (owner, pool). PDA `[\"position\", pool, owner]`.",
+        "",
+        "`owner` is the wallet that staked: it signed `stake`, or it sent tokens to",
+        "the pool address and the attestor attested it in `credit_deposit`. Rewards can be pushed to it by anyone",
+        "through `claim`, and tokens only ever go back to `owner`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "pending",
+            "type": "u64"
+          },
+          {
+            "name": "pending_epoch",
+            "type": "u64"
+          },
+          {
+            "name": "reward_debt",
+            "type": "u128"
+          },
+          {
+            "name": "rewards_owed",
+            "type": "u64"
+          },
+          {
+            "name": "cooldown_amount",
+            "type": "u64"
+          },
+          {
+            "name": "cooldown_until",
+            "type": "i64"
+          },
+          {
+            "name": "total_claimed",
+            "type": "u64"
+          },
+          {
+            "name": "rent_payer",
+            "docs": [
+              "Who paid this account's rent and gets it back at `close_position`: the",
+              "owner (wallet stake) or the attestor (deposit credited from a transfer)."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Staked",
+      "docs": [
+        "A stake signed by its owner (wallet path)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "active_from_epoch",
+            "type": "u64"
+          },
+          {
+            "name": "total_pending",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StrayTokenReturned",
+      "docs": [
+        "A token that was not the pool's coin, sent to the pool address by mistake, sent back by the admin."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Unstaked",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "MAX_CLAIM_FEE",
+      "docs": [
+        "Most a caller may keep from a payout it pushes: one signature's network fee.",
+        "A crank pushing n payouts in one transaction takes 5,000 / n from each, so",
+        "the payouts pay their own delivery and the stakers still get every lamport",
+        "of the fees minus that."
+      ],
+      "type": "u64",
+      "value": "5000"
+    },
+    {
+      "name": "MAX_EXIT_FEE",
+      "type": "u64",
+      "value": "50000000"
+    },
+    {
+      "name": "MAX_LAUNCH_FEE",
+      "docs": [
+        "Caps on what the admin can set as platform fees: the launch fee paid once",
+        "when a pool opens, and the exit fee paid when a staker asks to leave."
+      ],
+      "type": "u64",
+      "value": "200000000"
+    },
+    {
+      "name": "MIN_CREDIT_AMOUNT",
+      "docs": [
+        "Smallest deposit the attestor may credit: 1,000 tokens (6 decimals). The",
+        "attestor pays the rent of new positions, so dust must not be able to create",
+        "them. The crank adds a value floor on top (off-chain)."
+      ],
+      "type": "u64",
+      "value": "1000000000"
+    },
+    {
+      "name": "MIN_EXIT_LAMPORTS",
+      "docs": [
+        "Smallest lamport transfer to a pool address the crank reads as \"the sender",
+        "wants out\": 0.01 SOL. Documented for the crank and the UI; the program",
+        "itself treats every lamport that reaches a pool as fees for the stakers",
+        "(`request_exit` moves the platform's exit fee out of it when it is still in",
+        "the running window)."
+      ],
+      "type": "u64",
+      "value": "10000000"
+    }
+  ]
+}
